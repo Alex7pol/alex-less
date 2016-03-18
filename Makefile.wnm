@@ -3,15 +3,21 @@
 
 #### Start of system configuration section. ####
 
+# Target architectire
+# use nmake -f Makefile.wnm ARCH=X64  to override this definition
+# Environment variable arch would not override it. 
+#
+ARCH=I386
+
 CC = cl
 
 # Normal flags
 CFLAGS = /nologo /MD /W3 /EHsc /O2 /I "." /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /c 
-LDFLAGS = /nologo /subsystem:console /incremental:no /machine:I386
+LDFLAGS = /nologo /subsystem:console /incremental:no /machine:$(ARCH)
 
 # Debugging flags
 #CFLAGS = /nologo /MDd /W3 /GX /Od /Gm /Zi /I "." /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /c
-#LDFLAGS = /nologo /subsystem:console /incremental:yes /debug /machine:I386
+#LDFLAGS = /nologo /subsystem:console /incremental:yes /debug /machine:$(ARCH)
 
 LD = link
 LIBS = user32.lib
