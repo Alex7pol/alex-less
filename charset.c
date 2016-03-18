@@ -14,6 +14,9 @@
  */
 
 #include "less.h"
+#if MSDOS_COMPILER==WIN32C
+#include <windows.h>
+#endif
 #if HAVE_LOCALE
 #include <locale.h>
 #include <ctype.h>
@@ -319,7 +322,15 @@ set_charset()
 		ichardef(s);
 		return;
 	}
-
+#ifdef WIN32
+	SetConsoleOutputCP(65001);
+    _setmode(_fileno(stdout),_O_U8TEXT);
+    _setmode(_fileno(stderr),_O_U8TEXT);
+	if (isatty(fileno(stdin))) 
+		_setmode(_fileno(stdin),_O_U8TEXT);
+	icharset("UTF-8",0);
+	
+#else 
 #if HAVE_LOCALE
 #ifdef CODESET
 	/*
@@ -362,6 +373,7 @@ set_charset()
 	 * Default to "latin1".
 	 */
 	(void) icharset("latin1", 1);
+#endif
 #endif
 #endif
 }
