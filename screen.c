@@ -2490,7 +2490,13 @@ WIN32textout(text, len)
 {
 #if MSDOS_COMPILER==WIN32C
 	DWORD written;
-	WriteConsole(con_out, text, len, &written, NULL);
+	wchar_t widebuf[1024];
+	wchar_t *wb=widebuf;
+	if (len >= 1024) 
+		wb = (wchar_t *) malloc(len*sizeof(wchar_t));
+	written=MultiByteToWideChar(CP_UTF8,0,text,len,wb,len>1024?len:1024);
+	WriteConsoleW(con_out, wb, written, &written, NULL);
+	if (wb != widebuf) free(wb);
 #else
 	char c = text[len];
 	text[len] = '\0';

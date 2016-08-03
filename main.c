@@ -51,7 +51,6 @@ extern int	jump_sline;
 
 #ifdef WIN32
 static char consoleTitle[256];
-static int  savedConsoleCodePage;
 #endif
 
 extern int	less_is_more;
@@ -104,7 +103,6 @@ main(argc, argv)
 		}
 	}
 	GetConsoleTitle(consoleTitle, sizeof(consoleTitle)/sizeof(char));
-	savedConsoleCodePage = GetConsoleOutputCP();	
 #endif /* WIN32 */
 
 	/*
@@ -406,7 +404,6 @@ quit(status)
 #endif
 #ifdef WIN32
 	SetConsoleTitle(consoleTitle);
-	SetConsoleOutputCP(savedConsoleCodePage);
 #endif
 	close_getchr();
 	exit(status);

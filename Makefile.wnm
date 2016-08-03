@@ -16,7 +16,7 @@ CFLAGS = /nologo /MD /W3 /EHsc /O2 /I "." /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /
 LDFLAGS = /nologo /subsystem:console /incremental:no /machine:$(ARCH)
 
 # Debugging flags
-#CFLAGS = /nologo /MDd /W3 /GX /Od /Gm /Zi /I "." /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /c
+#CFLAGS = /nologo /MDd /W3 /EHsc /Od /Gm /Zi /I "." /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /c
 #LDFLAGS = /nologo /subsystem:console /incremental:yes /debug /machine:$(ARCH)
 
 LD = link

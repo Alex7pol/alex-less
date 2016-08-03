@@ -323,11 +323,6 @@ set_charset()
 		return;
 	}
 #ifdef WIN32
-	SetConsoleOutputCP(65001);
-    _setmode(_fileno(stdout),_O_U8TEXT);
-    _setmode(_fileno(stderr),_O_U8TEXT);
-	if (isatty(fileno(stdin))) 
-		_setmode(_fileno(stdin),_O_U8TEXT);
 	icharset("UTF-8",0);
 	
 #else 
