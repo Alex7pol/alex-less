@@ -716,7 +716,7 @@ store_prchar(c, pos)
 		return 1;
 
 	for ( ;  *s != 0;  s++)
-		STORE_CHAR(*s, AT_BINARY, NULL, pos);
+		STORE_CHAR(*s, AT_NORMAL, NULL, pos);
 
 	return 0;
 }

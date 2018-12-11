@@ -417,6 +417,7 @@ control_char(c)
 	c &= 0377;
 	return (chardef[c] & IS_CONTROL_CHAR);
 }
+    int isVvs =1;
 
 /*
  * Return the printable form of a character.
@@ -447,6 +448,7 @@ prchar(c)
 		"......W[.....EFG"
 		"..V....D....TU.Z"[c]);
 #else
+	else if(isVvs) SNPRINTF1(buf, sizeof(buf), "%c", c);
   	else if (c < 128 && !control_char(c ^ 0100))
   		SNPRINTF1(buf, sizeof(buf), "^%c", (int) (c ^ 0100));
 #endif
@@ -466,7 +468,8 @@ prutfchar(ch)
 
 	if (ch == ESC)
 		strcpy(buf, "ESC");
-  	else if (ch < 128 && control_char(ch))
+	else if (isVvs) SNPRINTF1(buf, sizeof(buf), "%c", ((char) ch) );
+	else if (ch < 128 && control_char(ch))
 	{
 		if (!control_char(ch ^ 0100))
 			SNPRINTF1(buf, sizeof(buf), "^%c", ((char) ch) ^ 0100);

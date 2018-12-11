@@ -2481,6 +2481,69 @@ WIN32setcolors(fg, bg)
 	SETCOLORS(fg, bg);
 }
 
+
+/* check string for utf-8 coding 
+   if buflen == -1 than checks all string until zero byte
+*/
+#ifndef bool
+#define bool int;
+#define true 1;
+#define false 0;
+#endif
+
+bool is_utf8(const char * string, int buflen)
+{
+	if (!string)
+		return true;
+
+	const unsigned char * bytes = (const unsigned char *)string;
+	int num;
+
+	int l = 0; 
+
+
+	while ((*bytes != 0x00)  &&  (buflen == -1 || l < buflen ))
+	{
+		if ((*bytes & 0x80) == 0x00)
+		{
+			/* U+0000 to U+007F  */
+			num = 1;
+		}
+		else if ((*bytes & 0xE0) == 0xC0)
+		{
+			/* U+0080 to U+07FF */
+			num = 2;
+		}
+		else if ((*bytes & 0xF0) == 0xE0)
+		{
+			/* U+0800 to U+FFFF */
+			num = 3;
+		}
+		else if ((*bytes & 0xF8) == 0xF0)
+		{
+			/* U+10000 to U+10FFFF */
+			num = 4;
+		}
+		else
+			return false;
+
+		bytes += 1;
+		l++;
+		for (int i = 1; i < num; ++i)
+		{
+			if(buflen != -1 && l >= buflen) return false;
+			if ((*bytes & 0xC0) != 0x80)
+				return false;
+			bytes += 1;
+			l++;
+		}
+		
+	}
+
+	return true;
+}
+
+
 /*
  */
 	public void
@@ -2489,13 +2552,18 @@ WIN32textout(text, len)
 	int len;
 {
 #if MSDOS_COMPILER==WIN32C
+ /* check that string in utf-8 */
 	DWORD written;
 	wchar_t widebuf[1024];
 	wchar_t *wb=widebuf;
 	if (len >= 1024) 
 		wb = (wchar_t *) malloc(len*sizeof(wchar_t));
-	written=MultiByteToWideChar(CP_UTF8,0,text,len,wb,len>1024?len:1024);
-	WriteConsoleW(con_out, wb, written, &written, NULL);
+	if(is_utf8(text,len)){
+		written=MultiByteToWideChar(CP_UTF8,0,text,len,wb,len>1024?len:1024);
+		WriteConsoleW(con_out, wb, written, &written, NULL);
+	}
+	else WriteConsole(con_out, text, len, &written, NULL);
+
 	if (wb != widebuf) free(wb);
 #else
 	char c = text[len];
