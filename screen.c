@@ -2493,13 +2493,14 @@ WIN32setcolors(fg, bg)
 
 bool is_utf8(const char * string, int buflen)
 {
+	int num;
+	int l = 0; 
+	const unsigned char * bytes = (const unsigned char *)string;
+	int i;
+
 	if (!string)
 		return true;
 
-	const unsigned char * bytes = (const unsigned char *)string;
-	int num;
-
-	int l = 0; 
 
 
 	while ((*bytes != 0x00)  &&  (buflen == -1 || l < buflen ))
@@ -2529,7 +2530,7 @@ bool is_utf8(const char * string, int buflen)
 
 		bytes += 1;
 		l++;
-		for (int i = 1; i < num; ++i)
+		for (i = 1; i < num; ++i)
 		{
 			if(buflen != -1 && l >= buflen) return false;
 			if ((*bytes & 0xC0) != 0x80)
